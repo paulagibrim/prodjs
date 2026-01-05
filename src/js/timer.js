@@ -3,50 +3,57 @@
 // É isolado e não deve conseguir ler arquivos do computador ou rodar comandos do sistema;
 // Gerencia a interface e as ações dos botões;
 
-// Variaveis gerais
+// Variaveis de elementos do html
 const startBtn = document.getElementById("start-btn");
-const clockTimer = document.getElementById("clock-timer");
 const resetBtn = document.getElementById("reset-btn");
 const modeStopwatchBtn = document.getElementById("mode-stopwatch");
 const modeTimerBtn = document.getElementById("mode-timer");
+const minutesDisplay = document.getElementById("minutes-display");
+const minutesInput = document.getElementById("minutes-input");
+const secondsDisplay = document.getElementById("seconds-display");
+const secondsInput = document.getElementById("seconds-input");
 
-let currentMode = "stopwatch";
-
-// Variáveis de pomodoro
-const TIMER_DURATION = 30 * 60;
-
-// Variáveis de cronômetro
-let timerSeconds = 0;
-let timerId = null;
+let currentMode = "stopwatch"; // Modo atual do relógio
+let timerDuration = 30 * 60; // Tempo inicial do timer
+let timerSeconds = 0; // Contagem atual de segundos
+let timerId = null; // Id do timer (Interval)
 
 // Ativa a troca de modos ao clicar nas abas
 modeStopwatchBtn.addEventListener("click", () => {
   switchMode("stopwatch");
-});
+}); // Se clicar no 'stopwatch', muda para o cronômetro
 
 modeTimerBtn.addEventListener("click", () => {
   switchMode("timer");
-});
+}); // Se clicar no 'timer', muda para a contagem regressiva
 
 // Verifica o clique no start-btn
 startBtn.addEventListener("click", () => {
   if (timerId) {
-    startBtn.innerText = "Resume";
-    clockTimer.innerText = formatSecondsToClock(timerSeconds);
+    // Se o timer/cronômetro já tiver iniciado (o relógio tava rodando e vai parar)
+    startBtn.innerText = "Resume"; // Atualiza o texto do botao start/pause
+    updateClockDisplay(timerSeconds); // Pausa o relógio no horário atual
+    // Limpa o Interval e apaga o id
     clearInterval(timerId);
     timerId = null;
   } else {
-    startBtn.innerText = "Pause";
+    // Se o timer/cronometro estava parado já (e vai começar a rodar)
+    startBtn.innerText = "Pause"; // Atualiza o texto do botao start/pause
     timerId = setInterval(() => {
+      // Começa o interval
+      // Verifica se tem que aumentar (cronometro) ou diminuir (timer)
       if (currentMode === "stopwatch") {
         timerSeconds++;
       } else if (currentMode === "timer") {
         if (timerSeconds > 0) {
           timerSeconds--;
         } else if (timerSeconds === 0) {
+          // Se for timer e chegar a 0, é sinal que terminou! :D
+          // Apara o interval e reseta o id do timer
           clearInterval(timerId);
           timerId = null;
 
+          // Envia a notificaçao
           if (window.prodjs && window.prodjs.notifConclusion) {
             window.prodjs.notifConclusion(
               "Foco concluído!",
@@ -54,31 +61,41 @@ startBtn.addEventListener("click", () => {
             );
           }
 
+          // Altera o texto do botao start/pause
           startBtn.innerText = "Start";
 
-          timerSeconds = TIMER_DURATION;
-          clockTimer.innerText = formatSecondsToClock(timerSeconds);
+          // Reseta o tempo do cronômetro
+          timerSeconds = timerDuration;
         } else {
+          // Se nao for nenhum desses, houve algum erro.
           console.error("Tempo inválido:", timerSeconds);
         }
       }
-      clockTimer.innerText = formatSecondsToClock(timerSeconds);
+      // Atualiza o tempo do relógio
+      updateClockDisplay(timerSeconds);
     }, 1000);
   }
 });
 
 // Verifica o clique no reset-btn
 resetBtn.addEventListener("click", () => {
-  // Limpa o interval
+  // Limpa o interval e reseta o id
   clearInterval(timerId);
-
-  // Ajusta as variáveis
-  timerSeconds = 0;
   timerId = null;
 
-  // Ajusta os textos
+  // Verifica o modo para identificar qual sera o tempo zerado
+  if (currentMode === "stopwatch") {
+    timerSeconds = 0;
+  } else if (currentMode === "timer") {
+    timerSeconds = timerDuration;
+  } else {
+    // Se nao for nenhum desses modos, é um erro.
+    console.error("Erro ao resetar relógio do timer. Modo desconhecido:", modo);
+  }
+
+  // Ajusta os textos do start-btn e relógio
   startBtn.innerText = "Start";
-  clockTimer.innerText = formatSecondsToClock(timerSeconds);
+  updateClockDisplay(timerSeconds);
 });
 
 // Transforma os segundos em MM:SS
@@ -87,6 +104,23 @@ function formatSecondsToClock(seconds) {
   const clockSecs = String(seconds % 60).padStart(2, "0");
 
   return clockMins + ":" + clockSecs;
+}
+
+function getClockMinutes(seconds) {
+  return String(Math.floor(seconds / 60)).padStart(2, "0");
+}
+
+function getClockSeconds(seconds) {
+  return String(seconds % 60).padStart(2, "0");
+}
+
+// Atualiza a exibiçao dos min e segundos no front
+function updateClockDisplay(seconds) {
+  const clockMins = getClockMinutes(seconds);
+  const clockSecs = getClockSeconds(seconds);
+
+  minutesDisplay.innerText = clockMins;
+  secondsDisplay.innerText = clockSecs;
 }
 
 // Troca os modos (entre 'stopwatch' e 'timer')
@@ -101,13 +135,13 @@ function switchMode(mode) {
   if (mode === "stopwatch") {
     timerSeconds = 0;
   } else if (mode === "timer") {
-    timerSeconds = TIMER_DURATION;
+    timerSeconds = timerDuration;
   } else {
     console.error("Modo desconhecido:", mode);
   }
 
   // Atualiza o relógio da tela
-  clockTimer.innerText = formatSecondsToClock(timerSeconds);
+  updateClockDisplay(timerSeconds);
 
   // Atualiza o visual das abas
   const activeClasses = ["bg-white", "text-gray-800", "shadow-sm"];
@@ -129,3 +163,59 @@ function switchMode(mode) {
     console.error("Modo desconhecido:", mode);
   }
 }
+
+function editTimer() {
+  // Só poderemos editar esse imput se for no modo timer e tiver parado o relogio
+  // (sem estar no meio da contagem)
+  if (
+    !timerId &&
+    currentMode === "timer" &&
+    (timerSeconds === 0 || timerSeconds === timerDuration)
+  ) {
+    minutesInput.classList.remove("hidden");
+    secondsInput.classList.remove("hidden");
+
+    minutesInput.value = getClockMinutes(timerSeconds);
+    secondsInput.value = getClockSeconds(timerSeconds);
+
+    minutesInput.focus();
+    secondsInput.focus();
+  }
+}
+
+minutesDisplay.addEventListener("click", () => {
+  editTimer();
+});
+
+secondsDisplay.addEventListener("click", () => {
+  editTimer();
+});
+
+function saveTime() {
+  const newMinutes = parseInt(minutesInput.value);
+  const newSeconds = parseInt(secondsInput.value);
+
+  if (
+    !isNaN(newMinutes) &&
+    !isNaN(newSeconds) &&
+    newMinutes > 0 &&
+    newMinutes < 240 &&
+    newSeconds >= 0 &&
+    newSeconds < 60
+  ) {
+    timerDuration = newMinutes * 60 + newSeconds;
+    timerSeconds = timerDuration;
+    updateClockDisplay(timerSeconds);
+  }
+
+  minutesInput.classList.add("hidden");
+  secondsInput.classList.add("hidden");
+}
+
+minutesInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") saveTime();
+});
+
+secondsInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") saveTime();
+});

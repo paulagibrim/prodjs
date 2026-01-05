@@ -41,9 +41,36 @@
 
         </div>
 
-        <div class="flex justify-center mb-12">
-            <button id="clock-timer"
-                class="bg-transparent text-8xl font-medium text-gray-800 tabular-nums text-center w-full outline-none focus:text-[#007AFF] transition-colors cursor-text hover:bg-gray-200/20 rounded-2xl p-2">00:00</button>
+        <div class="flex justify-center mb-12 relative">
+
+            <div class="flex justify-center mb-12 text-8xl font-medium text-gray-800 tabular-nums">
+
+                <div class="relative">
+                    <span id="minutes-display"
+                        class="cursor-pointer hover:text-[#007AFF] transition-colors rounded-lg px-2">
+                        00
+                    </span>
+
+                    <input id="minutes-input" type="number"
+                        class="hidden absolute top-0 left-0 w-full h-full text-center bg-white text-[#007AFF] outline-none border-b-4 border-[#007AFF]"
+                        min="1" max="240">
+                </div>
+
+                <span class="mx-1">:</span>
+
+                <div class="relative">
+                    <span id="seconds-display"
+                        class="cursor-pointer hover:text-[#007AFF] transition-colors rounded-lg px-2">
+                        00
+                    </span>
+                    <input id="seconds-input" type="number"
+                        class="hidden absolute top-0 left-0 w-full h-full text-center bg-white text-[#007AFF] outline-none border-b-4 border-[#007AFF]"
+                        min="0" max="59">
+
+                </div>
+
+            </div>
+
         </div>
 
         <div class="flex gap-4 w-full">
