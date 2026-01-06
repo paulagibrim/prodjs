@@ -5,38 +5,40 @@ let currentYear = getYear(currentDate);
 const nextMonthBtn = document.getElementById("next-month");
 const lastMonthBtn = document.getElementById("last-month");
 
+// Funçoes para obter informaçoes da data
 function getMonth(date) {
   return date.getMonth();
-}
+} // Pegar o mês
 
 function getYear(date) {
   return date.getFullYear();
-}
+} // Pegar o ano
 
 function getWeekDay(date) {
   return date.getDay();
-}
+} // Pegar o dia da semana (0-6)
 
 function getNextMonth() {
   if (currentMonth >= 0 && currentMonth < 11) return currentMonth + 1;
   else if (currentMonth == 11) return 0;
   else console.error("Mês desconhecido:", currentMonth);
-}
+} // Descobrir qual o próximo mês
 
 function getLastMonth() {
   if (currentMonth > 0 && currentMonth <= 11) return currentMonth - 1;
   else if (currentMonth == 0) return 11;
   else console.error("Mês desconhecido:", currentMonth);
-}
+} // Descobrir o mês anterior
 
 function getNextYear() {
   return currentYear + 1;
-}
+} // Descobrir o próximo ano
 
 function getLastYear() {
   return currentYear - 1;
-}
+} // Descobrir o ano anterior
 
+// Verifica clique de navegacao entre meses
 lastMonthBtn.addEventListener("click", () => {
   let newMonth = getLastMonth();
   if (currentMonth === 0) {
@@ -45,7 +47,7 @@ lastMonthBtn.addEventListener("click", () => {
   currentMonth = newMonth;
 
   renderCalendar();
-});
+}); // Mes anterior
 
 nextMonthBtn.addEventListener("click", () => {
   let newMonth = getNextMonth();
@@ -55,13 +57,15 @@ nextMonthBtn.addEventListener("click", () => {
   currentMonth = newMonth;
 
   renderCalendar();
-});
+}); // Mês seguinte
 
+// Funçao para desenhar o calendário
 function renderCalendar() {
+  // Pega os elementos de grid e título do calendário
   const calendarGrid = document.getElementById("calendar-grid");
   const monthTitle = document.getElementById("current-month");
 
-  // Atualiza o título (mes ANO)
+  // Atualiza o título ('mes' de 'ano')
   monthTitle.innerText = new Date(currentYear, currentMonth).toLocaleDateString(
     "default",
     { month: "long", year: "numeric" }
@@ -75,18 +79,24 @@ function renderCalendar() {
   const startingDay = firstDayOfMonth.getDay(); // Dia da semana que começa (0-6)
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate(); // Total de dias
 
+  // Variáveis para garantir sempre o mesmo tamanho do calendário
+  const totalSlots = 6 * 7; // 6 semanas (max) x 7 dias
+  const usedSlots = startingDay + daysInMonth;
+  const remainingSlots = totalSlots - usedSlots; // Quantidade de vazios no final
+
   // Cria divs vazias até chegar no dia da semana que o mês começa
   for (let i = 0; i < startingDay; i++) {
     const emptyDay = document.createElement("div");
     calendarGrid.appendChild(emptyDay);
   }
-  // 5. Loop dos Dias do Mês
+
+  // Loop incluindo os dias do mês
   for (let day = 1; day <= daysInMonth; day++) {
     const dayButton = document.createElement("button");
     dayButton.innerText = day;
 
     dayButton.addEventListener("click", () => {
-      // 1. Procura se já tem alguém selecionado pela classe 'selected-day'
+      // Procura se já tem alguém selecionado pela classe 'selected-day'
       const selecionadoAnterior = document.querySelector(".selected-day");
 
       // Se achou, remove a borda azul e a etiqueta
@@ -98,11 +108,11 @@ function renderCalendar() {
         );
       }
 
-      // 2. Adiciona a borda azul e a etiqueta no botão clicado agora
+      // Adiciona a borda azul e a etiqueta no botão clicado agora
       dayButton.classList.add("ring-2", "ring-blue-600", "selected-day");
     });
 
-    // Adiciona as classes do Tailwind (mesmo visual do HTML estático)
+    // Adiciona as classes do Tailwind
     dayButton.className =
       "h-10 w-10 flex items-center justify-center rounded-full text-gray-700 hover:bg-blue-100 hover:text-[#007AFF] transition-all text-sm";
 
@@ -126,6 +136,14 @@ function renderCalendar() {
 
     calendarGrid.appendChild(dayButton);
   }
+
+  // Cria divs vazias até chegar no total de dias do calendário.
+  for (let i = 0; i < remainingSlots; i++) {
+    const emptyDay = document.createElement("div");
+    emptyDay.className = "h-10 w-10";
+    calendarGrid.appendChild(emptyDay);
+  }
 }
 
+// Chama a funçao e desenha o calendário
 renderCalendar();

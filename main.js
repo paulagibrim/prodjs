@@ -19,7 +19,7 @@ function createWindow() {
   });
 
   // Carrega o html
-  win.loadFile("src/views/index.html");
+  win.loadFile("src/html/index.html");
 }
 
 // Aqui exibimos as notificacoes
