@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>FocusFlow</title>
+    <title>Prodjs</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Remove a borda padrão do iframe */
@@ -18,7 +18,7 @@
     <nav class="w-64 bg-white border-r border-gray-200 flex flex-col p-6 shadow-lg z-10">
 
         <h1 class="text-2xl font-bold text-gray-800 mb-10 tracking-tight">
-            Focus<span class="text-[#007AFF]">Flow</span>
+            Prod<span class="text-[#007AFF]">js</span>
         </h1>
 
         <div class="space-y-4 flex-1">
@@ -44,25 +44,7 @@
         <iframe id="app-frame" src="timer.html" class="w-full h-full absolute top-0 left-0"></iframe>
     </main>
 
-    <script>
-        const navTimer = document.getElementById('nav-timer');
-        const navCalendar = document.getElementById('nav-calendar');
-        const appFrame = document.getElementById('app-frame');
-
-        // Função para atualizar o visual dos botões
-        function updateActiveButton(activeBtn, inactiveBtn) {
-            // Estilo Ativo
-            activeBtn.classList.remove('text-gray-500', 'hover:text-gray-900', 'hover:bg-gray-100');
-            activeBtn.classList.add('text-[#007AFF]', 'bg-blue-50');
-
-            // Estilo Inativo
-            inactiveBtn.classList.remove('text-[#007AFF]', 'bg-blue-50');
-            inactiveBtn.classList.add('text-gray-500', 'hover:text-gray-900', 'hover:bg-gray-100');
-        }
-
-        // --- LÓGICA DE NAVEGAÇÃO ---
-        // Aqui é com você! 👇
-    </script>
+    <script src="../js/index.js"></script>
 </body>
 
 </html>

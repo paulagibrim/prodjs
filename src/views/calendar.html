@@ -1,0 +1,72 @@
+<!-- Notas:
+    Basicamente HTML/CSS + JS, um navegador Chrome;
+    É isolado e não deve conseguir ler arquivos do computador ou rodar comandos do sistema;
+    Gerencia a interface e as ações dos botões; -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>FocusFlow - macOS Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Remove as setinhas padrão do input de número se necessário */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-[#ececec] flex items-center justify-center h-screen font-sans select-none overflow-hidden">
+
+    <div
+        class="bg-white/60 backdrop-blur-2xl p-8 rounded-[40px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] border border-white/40 text-center w-[400px] transition-all hover:scale-[1.01]">
+
+        <div class="flex justify-between items-center mb-6">
+            <button id="last-month" class="text-gray-500 hover:text-[#007AFF] transition-colors p-2">
+                &lt; </button>
+
+            <h2 id="current-month" class="text-xl font-bold text-gray-800 uppercase tracking-widest">
+                JANEIRO 2026
+            </h2>
+
+            <button id="next-month" class="text-gray-500 hover:text-[#007AFF] transition-colors p-2">
+                &gt; </button>
+        </div>
+
+        <div class="grid grid-cols-7 gap-1 mb-2">
+            <div class="text-xs font-bold text-gray-400 uppercase">Dom</div>
+            <div class="text-xs font-bold text-gray-400 uppercase">Seg</div>
+            <div class="text-xs font-bold text-gray-400 uppercase">Ter</div>
+            <div class="text-xs font-bold text-gray-400 uppercase">Qua</div>
+            <div class="text-xs font-bold text-gray-400 uppercase">Qui</div>
+            <div class="text-xs font-bold text-gray-400 uppercase">Sex</div>
+            <div class="text-xs font-bold text-gray-400 uppercase">Sab</div>
+        </div>
+
+        <div id="calendar-grid" class="grid grid-cols-7 gap-1">
+
+            <span></span>
+            <span></span>
+
+            <button
+                class="h-10 w-10 flex items-center justify-center rounded-full text-gray-700 hover:bg-blue-100 hover:text-[#007AFF] transition-all text-sm">1</button>
+            <button
+                class="h-10 w-10 flex items-center justify-center rounded-full text-gray-700 hover:bg-blue-100 hover:text-[#007AFF] transition-all text-sm">2</button>
+
+            <button
+                class="h-10 w-10 flex items-center justify-center rounded-full bg-[#007AFF] text-white shadow-md shadow-blue-500/30 text-sm font-bold">3</button>
+
+            <button
+                class="h-10 w-10 flex items-center justify-center rounded-full text-gray-700 hover:bg-blue-100 hover:text-[#007AFF] transition-all text-sm">4</button>
+        </div>
+
+    </div>
+
+    <script src="../js/calendar.js"></script>
+</body>
+
+</html>
