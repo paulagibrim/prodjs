@@ -17,14 +17,15 @@ let currentMode = "stopwatch"; // Modo atual do relógio
 let timerDuration = 30 * 60; // Tempo inicial do timer
 let timerSeconds = 0; // Contagem atual de segundos
 let timerId = null; // Id do timer (Interval)
+let isEditing = false; // Booleano para identificar se está editando ou nao
 
 // Ativa a troca de modos ao clicar nas abas
 modeStopwatchBtn.addEventListener("click", () => {
-  switchMode("stopwatch");
+  if (!isEditing) switchMode("stopwatch");
 }); // Se clicar no 'stopwatch', muda para o cronômetro
 
 modeTimerBtn.addEventListener("click", () => {
-  switchMode("timer");
+  if (!isEditing) switchMode("timer");
 }); // Se clicar no 'timer', muda para a contagem regressiva
 
 // Verifica o clique no start-btn
@@ -36,7 +37,7 @@ startBtn.addEventListener("click", () => {
     // Limpa o Interval e apaga o id
     clearInterval(timerId);
     timerId = null;
-  } else {
+  } else if (!isEditing) {
     // Se o timer/cronometro estava parado já (e vai começar a rodar)
     startBtn.innerText = "Pause"; // Atualiza o texto do botao start/pause
     timerId = setInterval(() => {
@@ -74,6 +75,8 @@ startBtn.addEventListener("click", () => {
       // Atualiza o tempo do relógio
       updateClockDisplay(timerSeconds);
     }, 1000);
+  } else {
+    console.error("Esse botão não funciona no modo de edição.");
   }
 });
 
@@ -98,29 +101,25 @@ resetBtn.addEventListener("click", () => {
   updateClockDisplay(timerSeconds);
 });
 
-// Transforma os segundos em MM:SS
-function formatSecondsToClock(seconds) {
-  const clockMins = String(Math.floor(seconds / 60)).padStart(2, "0");
-  const clockSecs = String(seconds % 60).padStart(2, "0");
-
-  return clockMins + ":" + clockSecs;
-}
-
+// Retorna a string do valor de minutos a partir dos segundos totais
 function getClockMinutes(seconds) {
   return String(Math.floor(seconds / 60)).padStart(2, "0");
 }
 
+// Retorna a string do valor de segundos restantes a partir dos segundos totais
 function getClockSeconds(seconds) {
   return String(seconds % 60).padStart(2, "0");
 }
 
+// Transforma os segundos em MM:SS
+function formatSecondsToClock(seconds) {
+  return getClockMinutes(seconds) + ":" + getClockSeconds(seconds);
+}
+
 // Atualiza a exibiçao dos min e segundos no front
 function updateClockDisplay(seconds) {
-  const clockMins = getClockMinutes(seconds);
-  const clockSecs = getClockSeconds(seconds);
-
-  minutesDisplay.innerText = clockMins;
-  secondsDisplay.innerText = clockSecs;
+  minutesDisplay.innerText = getClockMinutes(seconds);
+  secondsDisplay.innerText = getClockSeconds(seconds);
 }
 
 // Troca os modos (entre 'stopwatch' e 'timer')
@@ -164,37 +163,46 @@ function switchMode(mode) {
   }
 }
 
-function editTimer() {
-  // Só poderemos editar esse imput se for no modo timer e tiver parado o relogio
+// Açoes do modo de ediçao do timer
+function editTimer(selectedInput) {
+  // Só poderemos editar esse input se for no modo timer e tiver parado o relogio
   // (sem estar no meio da contagem)
   if (
     !timerId &&
     currentMode === "timer" &&
     (timerSeconds === 0 || timerSeconds === timerDuration)
   ) {
+    // Exibe os inputs
     minutesInput.classList.remove("hidden");
     secondsInput.classList.remove("hidden");
 
+    // Deixa de valor padrão no input o valor previamente definido
     minutesInput.value = getClockMinutes(timerSeconds);
     secondsInput.value = getClockSeconds(timerSeconds);
 
-    minutesInput.focus();
-    secondsInput.focus();
+    // Deixa o foco (cursor) no input selecionado
+    selectedInput.focus();
   }
 }
 
+// Ativa o modo ediçao se clicar no relógio
 minutesDisplay.addEventListener("click", () => {
-  editTimer();
-});
+  isEditing = true;
+  editTimer(minutesInput);
+}); // Nos minutos
 
 secondsDisplay.addEventListener("click", () => {
-  editTimer();
-});
+  isEditing = true;
+  editTimer(secondsInput);
+}); // Nos segundos
 
+// Salva o tempo digitado
 function saveTime() {
+  // Recebe os valores digitados como inteiros
   const newMinutes = parseInt(minutesInput.value);
   const newSeconds = parseInt(secondsInput.value);
 
+  // Se for válido e estiver no intervalo aceito, atualiza os valores
   if (
     !isNaN(newMinutes) &&
     !isNaN(newSeconds) &&
@@ -206,16 +214,26 @@ function saveTime() {
     timerDuration = newMinutes * 60 + newSeconds;
     timerSeconds = timerDuration;
     updateClockDisplay(timerSeconds);
+  } else {
+    console.error("Valor inválido:", newMinutes, ":", newSeconds);
   }
 
+  // Esconde os inputs
   minutesInput.classList.add("hidden");
   secondsInput.classList.add("hidden");
 }
 
+// Recebe o enter e salva o novo tempo
 minutesInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") saveTime();
-});
+  if (e.key === "Enter") {
+    saveTime();
+    isEditing = false;
+  }
+}); // No input de minutos
 
 secondsInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") saveTime();
-});
+  if (e.key === "Enter") {
+    saveTime();
+    isEditing = false;
+  }
+}); // No input de segundos

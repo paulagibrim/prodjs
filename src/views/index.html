@@ -1,92 +1,68 @@
-<!-- Notas:
-    Basicamente HTML/CSS + JS, um navegador Chrome;
-    É isolado e não deve conseguir ler arquivos do computador ou rodar comandos do sistema;
-    Gerencia a interface e as ações dos botões; -->
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
-    <title>FocusFlow - macOS Edition</title>
+    <title>FocusFlow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Remove as setinhas padrão do input de número se necessário */
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
+        /* Remove a borda padrão do iframe */
+        iframe {
+            border: none;
         }
     </style>
 </head>
 
-<body class="bg-[#ececec] flex items-center justify-center h-screen font-sans select-none overflow-hidden">
+<body class="bg-gray-100 h-screen flex overflow-hidden font-sans select-none">
 
-    <div
-        class="bg-white/60 backdrop-blur-2xl p-12 rounded-[50px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] border border-white/40 text-center w-[400px] transition-all hover:scale-[1.01]">
+    <nav class="w-64 bg-white border-r border-gray-200 flex flex-col p-6 shadow-lg z-10">
 
-        <h2 class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-10">Focus Time</h2>
+        <h1 class="text-2xl font-bold text-gray-800 mb-10 tracking-tight">
+            Focus<span class="text-[#007AFF]">Flow</span>
+        </h1>
 
-        <div class="bg-gray-200/50 p-1 rounded-full flex mb-8 relative">
+        <div class="space-y-4 flex-1">
 
-            <button id="mode-stopwatch"
-                class="w-1/2 bg-white text-gray-800 rounded-full py-2 text-sm font-semibold shadow-sm transition-all">
-                Stopwatch
+            <button id="nav-timer"
+                class="w-full flex items-center gap-4 px-4 py-3 text-left text-[#007AFF] bg-blue-50 rounded-xl font-medium transition-all hover:bg-blue-100">
+                <span>⏱️</span> Timer
             </button>
 
-            <button id="mode-timer"
-                class="w-1/2 text-gray-500 hover:text-gray-700 rounded-full py-2 text-sm font-medium transition-all">
-                Timer
+            <button id="nav-calendar"
+                class="w-full flex items-center gap-4 px-4 py-3 text-left text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl font-medium transition-all">
+                <span>📅</span> Calendário
             </button>
 
         </div>
 
-        <div class="flex justify-center mb-12 relative">
-
-            <div class="flex justify-center mb-12 text-8xl font-medium text-gray-800 tabular-nums">
-
-                <div class="relative">
-                    <span id="minutes-display"
-                        class="cursor-pointer hover:text-[#007AFF] transition-colors rounded-lg px-2">
-                        00
-                    </span>
-
-                    <input id="minutes-input" type="number"
-                        class="hidden absolute top-0 left-0 w-full h-full text-center bg-white text-[#007AFF] outline-none border-b-4 border-[#007AFF]"
-                        min="1" max="240">
-                </div>
-
-                <span class="mx-1">:</span>
-
-                <div class="relative">
-                    <span id="seconds-display"
-                        class="cursor-pointer hover:text-[#007AFF] transition-colors rounded-lg px-2">
-                        00
-                    </span>
-                    <input id="seconds-input" type="number"
-                        class="hidden absolute top-0 left-0 w-full h-full text-center bg-white text-[#007AFF] outline-none border-b-4 border-[#007AFF]"
-                        min="0" max="59">
-
-                </div>
-
-            </div>
-
+        <div class="text-xs text-gray-400 mt-auto text-center">
+            v1.0 MVP
         </div>
+    </nav>
 
-        <div class="flex gap-4 w-full">
-            <button id="start-btn"
-                class="flex-1 bg-[#007AFF] text-white px-8 py-4 rounded-2xl font-semibold shadow-lg shadow-blue-500/30 hover:bg-[#0063cc] active:scale-95 transition-all text-lg">
-                Start
-            </button>
+    <main class="flex-1 relative bg-[#ececec]">
+        <iframe id="app-frame" src="timer.html" class="w-full h-full absolute top-0 left-0"></iframe>
+    </main>
 
-            <button id="reset-btn"
-                class="bg-gray-200/80 text-gray-700 px-6 py-4 rounded-2xl font-semibold hover:bg-gray-300 active:scale-95 transition-all">
-                <span class="text-xl">↺</span>
-            </button>
-        </div>
-    </div>
+    <script>
+        const navTimer = document.getElementById('nav-timer');
+        const navCalendar = document.getElementById('nav-calendar');
+        const appFrame = document.getElementById('app-frame');
 
-    <script src="../js/timer.js"></script>
+        // Função para atualizar o visual dos botões
+        function updateActiveButton(activeBtn, inactiveBtn) {
+            // Estilo Ativo
+            activeBtn.classList.remove('text-gray-500', 'hover:text-gray-900', 'hover:bg-gray-100');
+            activeBtn.classList.add('text-[#007AFF]', 'bg-blue-50');
+
+            // Estilo Inativo
+            inactiveBtn.classList.remove('text-[#007AFF]', 'bg-blue-50');
+            inactiveBtn.classList.add('text-gray-500', 'hover:text-gray-900', 'hover:bg-gray-100');
+        }
+
+        // --- LÓGICA DE NAVEGAÇÃO ---
+        // Aqui é com você! 👇
+    </script>
 </body>
 
 </html>
