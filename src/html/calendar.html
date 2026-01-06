@@ -66,7 +66,47 @@
 
     </div>
 
-    <script src="../js/calendar.js"></script>
+    <div id="task-sidebar"
+        class="fixed top-0 right-0 h-full w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col">
+
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+            <div>
+                <h2 class="text-xl font-bold text-gray-800">Tarefas</h2>
+                <p id="sidebar-date-label" class="text-sm text-blue-600 font-medium">Selecione um dia</p>
+            </div>
+            <button id="close-sidebar"
+                class="text-gray-400 hover:text-gray-600 hover:bg-gray-200 p-2 rounded-full transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 custom-scrollbar">
+            <ul id="task-list" class="space-y-3">
+            </ul>
+        </div>
+
+        <div class="p-6 border-t border-gray-100 bg-gray-50">
+            <div class="flex gap-2">
+                <input type="text" id="task-input" placeholder="Nova tarefa..."
+                    class="flex-1 px-4 py-2 rounded-xl bg-white border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm">
+                <button id="add-task-btn"
+                    class="bg-[#007AFF] hover:bg-blue-600 text-white p-2 rounded-xl transition-all shadow-lg shadow-blue-500/30 active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                        stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sidebar-overlay"
+        class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden transition-opacity opacity-0"></div>
+
+    <script type="module" src="../js/calendar.js"></script>
 </body>
 
 </html>

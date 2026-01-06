@@ -1,9 +1,21 @@
+// Importar as funçoes de tasks
+import { openSideBar, closeSideBar } from "./tasks.js";
+
 let currentDate = new Date();
 let currentMonth = getMonth(currentDate);
 let currentYear = getYear(currentDate);
 
+let isSideBarOpen = false;
+let selectedDay = currentDate.getDay();
+
 const nextMonthBtn = document.getElementById("next-month");
 const lastMonthBtn = document.getElementById("last-month");
+const closeSideBarBtn = document.getElementById("close-sidebar");
+
+closeSideBarBtn.addEventListener("click", () => {
+  closeSideBar();
+  isSideBarOpen = false;
+});
 
 // Funçoes para obter informaçoes da data
 function getMonth(date) {
@@ -110,6 +122,32 @@ function renderCalendar() {
 
       // Adiciona a borda azul e a etiqueta no botão clicado agora
       dayButton.classList.add("ring-2", "ring-blue-600", "selected-day");
+
+      // Abre ou fecha a sidebar
+      if (!isSideBarOpen) {
+        // Se tiver fechada, abre para o dia que vc clicar
+        openSideBar();
+        selectedDay = day;
+        isSideBarOpen = true;
+      } else if (isSideBarOpen && selectedDay !== day) {
+        // Se tiver aberta em outro dia, mantém aberta e atualiza o dia
+        selectedDay = day;
+      } else if (isSideBarOpen && selectedDay === day) {
+        // Se tiver aberta no mesmo dia, fecha
+        closeSideBar();
+        isSideBarOpen = false;
+      } else {
+        // Verificaçao de segurança
+        console.error(
+          "Nao era pra chegar aqui... ",
+          "day=",
+          day,
+          " | selectedDay=",
+          selectedDay,
+          " | isSideBarOpen=",
+          isSideBarOpen
+        );
+      }
     });
 
     // Adiciona as classes do Tailwind
