@@ -32,14 +32,14 @@ modeTimerBtn.addEventListener("click", () => {
 startBtn.addEventListener("click", () => {
   if (timerId) {
     // Se o timer/cronômetro já tiver iniciado (o relógio tava rodando e vai parar)
-    startBtn.innerText = "Resume"; // Atualiza o texto do botao start/pause
+    startBtn.innerText = "Retomar"; // Atualiza o texto do botao start/pause
     updateClockDisplay(timerSeconds); // Pausa o relógio no horário atual
     // Limpa o Interval e apaga o id
     clearInterval(timerId);
     timerId = null;
   } else if (!isEditing) {
     // Se o timer/cronometro estava parado já (e vai começar a rodar)
-    startBtn.innerText = "Pause"; // Atualiza o texto do botao start/pause
+    startBtn.innerText = "Pausar"; // Atualiza o texto do botao start/pause
     timerId = setInterval(() => {
       // Começa o interval
       // Verifica se tem que aumentar (cronometro) ou diminuir (timer)
@@ -63,7 +63,7 @@ startBtn.addEventListener("click", () => {
           }
 
           // Altera o texto do botao start/pause
-          startBtn.innerText = "Start";
+          startBtn.innerText = "Iniciar";
 
           // Reseta o tempo do cronômetro
           timerSeconds = timerDuration;
@@ -97,7 +97,7 @@ resetBtn.addEventListener("click", () => {
   }
 
   // Ajusta os textos do start-btn e relógio
-  startBtn.innerText = "Start";
+  startBtn.innerText = "Iniciar";
   updateClockDisplay(timerSeconds);
 });
 
@@ -127,7 +127,7 @@ function switchMode(mode) {
   // Parar tudo e limpar o relógio
   clearInterval(timerId);
   timerId = null;
-  startBtn.innerText = "Start";
+  startBtn.innerText = "Iniciar";
   currentMode = mode;
 
   // Define o tempo baseado no modo
