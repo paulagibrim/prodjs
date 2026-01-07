@@ -1,5 +1,5 @@
 // Importar as funçoes de tasks
-import { openSideBar, closeSideBar } from "./tasks.js";
+// import { openSideBar, closeSideBar } from "./tasks.js";
 
 let currentDate = new Date();
 let currentMonth = getMonth(currentDate);
@@ -11,7 +11,15 @@ let selectedDay = currentDate.getDay();
 const nextMonthBtn = document.getElementById("next-month");
 const lastMonthBtn = document.getElementById("last-month");
 const closeSideBarBtn = document.getElementById("close-sidebar");
+const taskSideBar = document.getElementById("task-sidebar");
 
+function openSideBar() {
+  taskSideBar.classList.remove("translate-x-full");
+}
+
+function closeSideBar() {
+  taskSideBar.classList.add("translate-x-full");
+}
 closeSideBarBtn.addEventListener("click", () => {
   closeSideBar();
   isSideBarOpen = false;

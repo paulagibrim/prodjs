@@ -21,8 +21,6 @@ function updateActiveButton(activeBtn, inactiveBtn) {
   );
 }
 
-// --- LÓGICA DE NAVEGAÇÃO ---
-// Aqui é com você! 👇
 navCalendar.addEventListener("click", () => {
   // Atualiza a exibiçao principal
   appFrame.src = "calendar.html";
