@@ -7,7 +7,7 @@
 
 const Timer = {
   currentMode: "stopwatch", // Modo atual do relógio
-  duration: 3, // Tempo default do timer
+  duration: 30 * 60, // Tempo default do timer
   totalSeconds: 0, // Contagem atual de segundos
   id: null, // Id do timer (Interval)
   isEditing: false, // Booleano para identificar se está editando ou nao
@@ -104,23 +104,9 @@ const View = {
   },
 
   pushNotif: function (title, text) {
-    console.log("--- DEBUG NOTIFICAÇÃO ---");
-    console.log("1. Título:", title);
-    console.log("2. window.prodjs:", window.prodjs);
-
-    // Tenta acessar de forma segura
-    if (window.prodjs && typeof window.prodjs.notifConclusion === "function") {
-      console.log("3. Sucesso! Enviando pro Backend...");
-      window.prodjs.notifConclusion(title, text);
-    } else {
-      console.error(
-        "3. FALHA: O objeto 'prodjs' não foi encontrado pelo script."
-      );
-      console.warn(
-        "Dica: Verifique se você reiniciou o terminal (npm start) após editar o main.js"
-      );
+    if (window.parent.prodjs && window.parent.prodjs.notifConclusion) {
+      window.parent.prodjs.notifConclusion(title, text);
     }
-    console.log("-------------------------");
   },
 };
 

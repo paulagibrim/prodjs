@@ -14,7 +14,7 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: "src/preload.js",
+      preload: path.join(__dirname, "src", "preload.js"),
     },
   });
 
